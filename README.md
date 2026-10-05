@@ -36,3 +36,9 @@ npm run dev
 ```
 
 Use `localhost` (not `127.0.0.1`) on both sides so session cookies work.
+
+
+## Optional: MySQL via Docker
+```bash
+docker compose up -d   # then DB_PORT=3307, DB_PASSWORD=secret in api/.env
+```
