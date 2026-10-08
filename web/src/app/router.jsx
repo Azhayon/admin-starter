@@ -1,23 +1,19 @@
 import { createBrowserRouter } from "react-router-dom"
 import AdminLayout from "./layouts/AdminLayout"
-import { Button } from "@/components/ui/button"
+import AuthLayout from "./layouts/AuthLayout"
+import RequireAuth from "@/features/auth/RequireAuth"
+import LoginPage from "@/features/auth/LoginPage"
+import DashboardPage from "@/features/dashboard/DashboardPage"
 
-// createBrowserRouter = "data router": the whole route table is one plain object,
-// which is what makes a single router.jsx possible. A route with no `path`
-// (the layout below) just wraps its children.
 const router = createBrowserRouter([
+  // Public
+  { element: <AuthLayout />, children: [{ path: "/login", element: <LoginPage /> }] },
+
+  // Protected: RequireAuth wraps everything inside it
   {
-    element: <AdminLayout />,
+    element: <RequireAuth />,
     children: [
-      {
-        path: "/",
-        element: (
-          <div className="space-y-4">
-            <h1 className="text-2xl font-bold">admin-starter</h1>
-            <Button>shadcn works</Button>
-          </div>
-        ),
-      },
+      { element: <AdminLayout />, children: [{ path: "/", element: <DashboardPage /> }] },
     ],
   },
 ])
