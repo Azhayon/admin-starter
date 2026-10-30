@@ -1,6 +1,6 @@
 import api from "@/lib/api"
 
-export const ME_KEY = ["auth", "me"] // the cache key for "who is logged in"
+export { ME_KEY } from "@/lib/queryKeys" // the cache key for "who is logged in"
 
 // Sanctum SPA flow: get the CSRF cookie first, then POST credentials.
 export async function login(credentials) {

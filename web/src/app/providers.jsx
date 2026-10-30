@@ -5,7 +5,7 @@ const queryClient = new QueryClient()
 
 // One place for every global provider. AuthProvider gets added here later.
 export default function Providers({ children }) {
-   return (
+  return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>{children}</AuthProvider>
     </QueryClientProvider>
