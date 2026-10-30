@@ -5,6 +5,7 @@ return [
     'permissions' => [
         'users.view', 'users.create', 'users.update', 'users.delete',
         'roles.view', 'roles.create', 'roles.update', 'roles.delete',
+        'users.assign-roles',
     ],
 
     'roles' => [

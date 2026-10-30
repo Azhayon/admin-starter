@@ -21,6 +21,7 @@ class RoleResource extends JsonResource
             'permissions' => $this->permissions->pluck('name'),
             'users_count' => $this->whenCounted('users'),
             'created_at' => $this->created_at,
+            'is_protected' => in_array($this->name, config('rbac.protected_roles', []), true),
         ];
     }
 }

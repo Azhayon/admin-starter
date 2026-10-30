@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends ResourceController
 {
@@ -49,8 +50,14 @@ class UserController extends ResourceController
 
     private function syncRoles(User $user, array $data): void
     {
-        if (array_key_exists('roles', $data)) {
-            $user->roles()->sync(Role::whereIn('name', $data['roles'])->pluck('id'));
+        if (! array_key_exists('roles', $data)) {
+            return;
         }
+    
+        // Assigning roles is its own permission, so users.update alone is never a path to becoming admin.
+        Gate::authorize('users.assign-roles');
+        abort_if($user->is(request()->user()), 422, 'You cannot change your own roles.');
+    
+        $user->roles()->sync(Role::whereIn('name', $data['roles'])->pluck('id'));
     }
 }

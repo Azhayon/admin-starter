@@ -78,17 +78,27 @@ class UserApiTest extends TestCase
             'name' => 'X', 'email' => 'x@example.com', 'password' => 'password123',
         ])->assertForbidden();
     }
-
-    public function test_manager_can_create_a_user_with_roles(): void
+    
+    public function test_manager_can_create_a_user_but_not_assign_roles(): void
     {
         $this->actingAsRole('manager');
-
+        $payload = ['name' => 'New Person', 'email' => 'new@example.com', 'password' => 'password123'];
+    
+        $this->postJson('/api/v1/users', $payload)->assertCreated();
+    
+        $this->postJson('/api/v1/users', [...$payload, 'email' => 'other@example.com', 'roles' => ['viewer']])
+            ->assertForbidden();
+        $this->assertDatabaseMissing('users', ['email' => 'other@example.com']); // transaction rolled back
+    }
+    
+    public function test_admin_can_assign_roles(): void
+    {
+        $this->actingAsRole('admin');
+    
         $this->postJson('/api/v1/users', [
             'name' => 'New Person', 'email' => 'new@example.com',
             'password' => 'password123', 'roles' => ['viewer'],
         ])->assertCreated()->assertJsonPath('data.roles', ['viewer']);
-
-        $this->assertDatabaseHas('users', ['email' => 'new@example.com']);
     }
 
     public function test_invalid_input_returns_422_with_field_errors(): void
