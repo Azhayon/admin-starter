@@ -12,4 +12,7 @@ return [
         'manager' => ['label' => 'Manager', 'permissions' => ['users.view', 'users.create', 'users.update']],
         'viewer'  => ['label' => 'Viewer', 'permissions' => ['users.view', 'roles.view']],
     ],
+
+    // Roles that can't be edited or deleted through the API.
+    'protected_roles' => ['admin'],
 ];

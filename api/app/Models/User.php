@@ -9,11 +9,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Concerns\HasRoles;
+use App\Concerns\Filterable;
+use App\Concerns\Sortable;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Filterable, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -48,4 +51,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+    public function filterableFields(): array
+    {
+        return [
+            'name' => 'partial',
+            'email' => 'partial',
+            // A relationship filter: ?filter[role]=admin
+            'role' => fn (Builder $q, $value) => $q->whereHas('roles', fn ($r) => $r->where('name', $value)),
+        ];
+    }
+
+    public function searchableFields(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public function sortableFields(): array
+    {
+        return ['id', 'name', 'email', 'created_at'];
+    }
 }
+
