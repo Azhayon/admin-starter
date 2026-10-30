@@ -4,6 +4,9 @@ import AuthLayout from "./layouts/AuthLayout"
 import RequireAuth from "@/features/auth/RequireAuth"
 import LoginPage from "@/features/auth/LoginPage"
 import DashboardPage from "@/features/dashboard/DashboardPage"
+import RequirePermission from "@/features/auth/RequirePermission"
+import UsersPage from "@/features/users/UsersPage"
+import RolesPage from "@/features/roles/RolesPage"
 
 const router = createBrowserRouter([
   // Public
@@ -13,7 +16,20 @@ const router = createBrowserRouter([
   {
     element: <RequireAuth />,
     children: [
-      { element: <AdminLayout />, children: [{ path: "/", element: <DashboardPage /> }] },
+      {
+        element: <AdminLayout />,
+        children: [
+          { path: "/", element: <DashboardPage /> },
+          {
+            element: <RequirePermission permission="users.view" />,
+            children: [{ path: "/users", element: <UsersPage /> }],
+          },
+          {
+            element: <RequirePermission permission="roles.view" />,
+            children: [{ path: "/roles", element: <RolesPage /> }],
+          },
+        ],
+      },
     ],
   },
 ])

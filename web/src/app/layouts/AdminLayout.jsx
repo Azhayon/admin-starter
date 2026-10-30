@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { useAuth } from "@/hooks/useAuth"
 import { Button } from "@/components/ui/button"
+import Sidebar from "./Sidebar"
 
 export default function AdminLayout() {
   const { user, logout } = useAuth()
@@ -16,9 +17,12 @@ export default function AdminLayout() {
           </Button>
         </div>
       </header>
-      <main className="p-6">
-        <Outlet />
-      </main>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   )
 }
