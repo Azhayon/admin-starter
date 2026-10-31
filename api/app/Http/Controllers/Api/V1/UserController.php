@@ -14,10 +14,15 @@ use Illuminate\Support\Facades\Gate;
 class UserController extends ResourceController
 {
     protected string $model = User::class;
+
     protected string $resource = UserResource::class;
+
     protected string $permission = 'users';
+
     protected string $storeRequest = StoreUserRequest::class;
+
     protected string $updateRequest = UpdateUserRequest::class;
+
     // UserResource prints roles + permissions: eager load them so a list of 50 users is 3 queries, not 100+.
     protected array $with = ['roles.permissions'];
 
@@ -53,11 +58,11 @@ class UserController extends ResourceController
         if (! array_key_exists('roles', $data)) {
             return;
         }
-    
+
         // Assigning roles is its own permission, so users.update alone is never a path to becoming admin.
         Gate::authorize('users.assign-roles');
         abort_if($user->is(request()->user()), 422, 'You cannot change your own roles.');
-    
+
         $user->auditRelation('roles', 'roles_changed', fn () => $user->roles()->sync(
             Role::whereIn('name', $data['roles'])->pluck('id')
         ));

@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Support\ServiceProvider;
 use App\Models\Role;
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -3,21 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Concerns\Auditable;
+use App\Concerns\Filterable;
+use App\Concerns\HasRoles;
+use App\Concerns\Sortable;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Concerns\HasRoles;
-use App\Concerns\Filterable;
-use App\Concerns\Sortable;
-use App\Concerns\Auditable;
-use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Filterable, Sortable, Auditable;
+    use Auditable, Filterable, HasApiTokens, HasFactory, HasRoles, Notifiable, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +52,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function filterableFields(): array
     {
         return [
@@ -78,4 +78,3 @@ class User extends Authenticatable
         return $this->email; // names repeat, emails are unique
     }
 }
-

@@ -30,7 +30,7 @@ class RolePermissionSeeder extends Seeder
             $unknown = $wanted->diff($ids->keys());
             if ($unknown->isNotEmpty()) {
                 throw new InvalidArgumentException(
-                    "Role '$name' references unknown permissions: " . $unknown->implode(', ')
+                    "Role '$name' references unknown permissions: ".$unknown->implode(', ')
                 );
             }
 

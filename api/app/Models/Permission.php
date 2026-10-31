@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Concerns\Filterable;
 use App\Concerns\Sortable;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Permission extends Model
 {
@@ -23,17 +22,17 @@ class Permission extends Model
     {
         return ['name' => 'partial'];
     }
-    
+
     public function searchableFields(): array
     {
         return ['name'];
     }
-    
+
     public function sortableFields(): array
     {
         return ['id', 'name'];
     }
-    
+
     public function defaultSort(): string
     {
         return 'name';

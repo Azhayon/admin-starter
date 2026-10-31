@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Concerns\Auditable;
 use App\Concerns\Filterable;
 use App\Concerns\Sortable;
-use App\Concerns\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    use Filterable, Sortable, Auditable;
+    use Auditable, Filterable, Sortable;
+
     protected $fillable = ['name', 'label'];
 
     // Laravel infers the pivot tables (permission_role, role_user) from alphabetical model names.
@@ -28,12 +29,12 @@ class Role extends Model
     {
         return ['name' => 'partial', 'label' => 'partial'];
     }
-    
+
     public function searchableFields(): array
     {
         return ['name', 'label'];
     }
-    
+
     public function sortableFields(): array
     {
         return ['id', 'name', 'label', 'created_at'];

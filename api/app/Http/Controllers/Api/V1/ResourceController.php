@@ -20,11 +20,17 @@ use Illuminate\Support\Facades\Gate;
 abstract class ResourceController extends Controller
 {
     protected string $model;         // Eloquent model (must use Filterable + Sortable)
+
     protected string $resource;      // API Resource class (response shape)
+
     protected string $permission;    // permission prefix: "users" => users.view / .create / .update / .delete
+
     protected string $storeRequest;  // FormRequest class for POST
+
     protected string $updateRequest; // FormRequest class for PATCH/PUT
+
     protected array $with = [];      // relations to eager load (avoids N+1 queries)
+
     protected array $withCount = []; // relation counts to include
 
     public function index(Request $request): AnonymousResourceCollection

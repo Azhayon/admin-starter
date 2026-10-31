@@ -13,11 +13,17 @@ use Illuminate\Support\Arr;
 class RoleController extends ResourceController
 {
     protected string $model = Role::class;
+
     protected string $resource = RoleResource::class;
+
     protected string $permission = 'roles';
+
     protected string $storeRequest = StoreRoleRequest::class;
+
     protected string $updateRequest = UpdateRoleRequest::class;
+
     protected array $with = ['permissions'];
+
     protected array $withCount = ['users'];
 
     protected function createRecord(array $data): Model
