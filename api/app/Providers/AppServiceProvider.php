@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Role;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +34,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->hasPermission($ability) ?: null;
         });
+
+        // The database stores "user"/"role", not PHP class names, so refactoring namespaces can't orphan old rows.
+        // "enforce" = a model without an alias throws, instead of silently storing its class name.
+        Relation::enforceMorphMap([
+            'user' => User::class,
+            'role' => Role::class,
+        ]);
     }
 }

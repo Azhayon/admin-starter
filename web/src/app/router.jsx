@@ -7,6 +7,7 @@ import DashboardPage from "@/features/dashboard/DashboardPage"
 import RequirePermission from "@/features/auth/RequirePermission"
 import UsersPage from "@/features/users/UsersPage"
 import RolesPage from "@/features/roles/RolesPage"
+import AuditLogsPage from "@/features/audit/AuditLogsPage"
 
 const router = createBrowserRouter([
   // Public
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
           {
             element: <RequirePermission permission="roles.view" />,
             children: [{ path: "/roles", element: <RolesPage /> }],
+          },
+          {
+            element: <RequirePermission permission="audit-logs.view" />,
+            children: [{ path: "/audit-log", element: <AuditLogsPage /> }],
           },
         ],
       },

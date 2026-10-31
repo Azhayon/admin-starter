@@ -11,12 +11,13 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Concerns\HasRoles;
 use App\Concerns\Filterable;
 use App\Concerns\Sortable;
+use App\Concerns\Auditable;
 use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Filterable, Sortable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Filterable, Sortable, Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -70,6 +71,11 @@ class User extends Authenticatable
     public function sortableFields(): array
     {
         return ['id', 'name', 'email', 'created_at'];
+    }
+
+    public function auditLabel(): string
+    {
+        return $this->email; // names repeat, emails are unique
     }
 }
 

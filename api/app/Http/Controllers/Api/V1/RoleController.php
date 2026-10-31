@@ -57,7 +57,9 @@ class RoleController extends ResourceController
     private function syncPermissions(Role $role, array $data): void
     {
         if (array_key_exists('permissions', $data)) {
-            $role->permissions()->sync(Permission::whereIn('name', $data['permissions'])->pluck('id'));
+            $role->auditRelation('permissions', 'permissions_changed', fn () => $role->permissions()->sync(
+                Permission::whereIn('name', $data['permissions'])->pluck('id')
+            ));
         }
     }
 }

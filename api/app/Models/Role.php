@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Concerns\Filterable;
 use App\Concerns\Sortable;
+use App\Concerns\Auditable;
 
 class Role extends Model
 {
-    use Filterable, Sortable;
+    use Filterable, Sortable, Auditable;
     protected $fillable = ['name', 'label'];
 
     // Laravel infers the pivot tables (permission_role, role_user) from alphabetical model names.

@@ -58,6 +58,8 @@ class UserController extends ResourceController
         Gate::authorize('users.assign-roles');
         abort_if($user->is(request()->user()), 422, 'You cannot change your own roles.');
     
-        $user->roles()->sync(Role::whereIn('name', $data['roles'])->pluck('id'));
+        $user->auditRelation('roles', 'roles_changed', fn () => $user->roles()->sync(
+            Role::whereIn('name', $data['roles'])->pluck('id')
+        ));
     }
 }

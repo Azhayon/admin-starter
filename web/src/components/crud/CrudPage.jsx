@@ -15,12 +15,13 @@ import { getErrorMessage } from "@/lib/errors"
  * resource:   API path segment ("users")        singular: "user"      title: "Users"
  * permission: RBAC prefix ("users" -> users.create / users.update / users.delete)
  * columns:    DataTable columns (an Actions column is added for you)
- * fields:     ({ isEdit, record }) => field configs for ResourceForm
+ * fields:     ({ isEdit, record }) => field configs for ResourceForm. Omit it for read-only pages
+ *             (no create/edit dialog is rendered).
  * canEdit / canDelete: (record) => boolean, for per-row rules (protected roles, "not yourself", ...)
  */
 export default function CrudPage({
   resource, singular, title, permission, columns, fields,
-  canEdit = () => true, canDelete = () => true, mutationOptions,
+  canEdit = () => true, canDelete = () => true, mutationOptions, rowActions,
 }) {
   const { can } = usePermission()
 
@@ -83,6 +84,7 @@ export default function CrudPage({
       className: "text-right",
       cell: (row) => (
         <div className="flex justify-end gap-2">
+          {rowActions?.(row)}
           {can(`${permission}.update`) && canEdit(row) && (
             <Button variant="outline" size="sm" onClick={() => openEdit(row)}>Edit</Button>
           )}
@@ -130,21 +132,23 @@ export default function CrudPage({
         />
       )}
 
-      <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingRecord ? `Edit ${singular}` : `New ${singular}`}</DialogTitle>
-            <DialogDescription>Fill in the details below.</DialogDescription>
-          </DialogHeader>
-          <ResourceForm
-            key={editingRecord?.id ?? "new"} // a different key = a fresh form, so no stale values
-            fields={fields({ isEdit: !!editingRecord, record: editingRecord })}
-            record={editingRecord}
-            onSubmit={handleSubmit}
-            onCancel={() => setFormOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      {fields && (
+        <Dialog open={formOpen} onOpenChange={setFormOpen}>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editingRecord ? `Edit ${singular}` : `New ${singular}`}</DialogTitle>
+              <DialogDescription>Fill in the details below.</DialogDescription>
+            </DialogHeader>
+            <ResourceForm
+              key={editingRecord?.id ?? "new"}
+              fields={fields({ isEdit: !!editingRecord, record: editingRecord })}
+              record={editingRecord}
+              onSubmit={handleSubmit}
+              onCancel={() => setFormOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
 
       <ConfirmDialog
         open={!!deleting}
