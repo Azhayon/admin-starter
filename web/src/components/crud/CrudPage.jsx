@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import ConfirmDialog from "@/components/ConfirmDialog"
 import PageHeader from "@/components/PageHeader"
 import DataTable from "@/components/data-table/DataTable"
@@ -45,11 +45,6 @@ export default function CrudPage({
   })
   const { create, update, remove } = useResourceMutations(resource, mutationOptions)
 
-  // If the last row of the last page was deleted, step back to a page that still exists.
-  const lastPage = data?.meta?.last_page
-  useEffect(() => {
-    if (lastPage && page > lastPage) setPage(lastPage)
-  }, [lastPage, page])
 
   const openCreate = () => {
     setEditingRecord(null)
@@ -71,6 +66,9 @@ export default function CrudPage({
     try {
       await remove.mutateAsync(deleting.id)
       setDeleting(null)
+      // Deleted the only row on this page? Step back one page. It happens here, in the
+      // event that caused the change, so no effect is needed.
+      if (page > 1 && data?.data.length === 1) setPage(page - 1)
     } catch (err) {
       setDeleteError(getErrorMessage(err))
     }

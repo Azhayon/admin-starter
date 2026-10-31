@@ -93,4 +93,17 @@ class AuditLogTest extends TestCase
         $this->expectException(LogicException::class);
         $log->update(['event' => 'tampered']);
     }
+
+    public function test_old_entries_are_pruned(): void
+    {
+        config(['audit.retention_days' => 30]);
+
+        $old = AuditLog::create([
+            'event' => 'updated', 'auditable_type' => 'user', 'auditable_id' => 1, 'created_at' => now()->subDays(40),
+        ]);
+
+        $this->artisan('model:prune', ['--model' => AuditLog::class])->assertSuccessful();
+
+        $this->assertDatabaseMissing('audit_logs', ['id' => $old->id]);
+    }
 }

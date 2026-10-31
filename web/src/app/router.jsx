@@ -3,7 +3,6 @@ import AdminLayout from "./layouts/AdminLayout"
 import AuthLayout from "./layouts/AuthLayout"
 import RequireAuth from "@/features/auth/RequireAuth"
 import LoginPage from "@/features/auth/LoginPage"
-import DashboardPage from "@/features/dashboard/DashboardPage"
 import RequirePermission from "@/features/auth/RequirePermission"
 import UsersPage from "@/features/users/UsersPage"
 import RolesPage from "@/features/roles/RolesPage"
@@ -20,7 +19,14 @@ const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          { path: "/", element: <DashboardPage /> },
+          {
+            path: "/",
+            lazy: async () => {
+              // Loaded as a separate JS file the first time someone visits "/"
+              const { default: Component } = await import("@/features/dashboard/DashboardPage")
+              return { Component }
+            },
+          },
           {
             element: <RequirePermission permission="users.view" />,
             children: [{ path: "/users", element: <UsersPage /> }],

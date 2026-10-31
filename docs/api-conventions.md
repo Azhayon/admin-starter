@@ -22,3 +22,15 @@ Response: `{ "data": [...], "links": {...}, "meta": { "current_page", "per_page"
 3. Controller extending `ResourceController` (set the config properties; override `*Record()` hooks if needed)
 4. Route: `Route::apiResource('<names>', <Name>Controller::class)` inside the v1 group
 5. Add `<names>.view|create|update|delete` to `config/rbac.php`, then `php artisan db:seed --class=RolePermissionSeeder`
+
+## Metrics (dashboard widgets)
+`GET /api/v1/metrics/{name}?days=N` -> `{ "data": ... }`, permission checked per metric.
+
+| Shape | Payload | Widget |
+|---|---|---|
+| stat | `{ value, previous? }` | StatWidget |
+| series | `{ points: [{ date, value }] }` | TrendWidget |
+| distribution | `{ items: [{ label, value }] }` | DistributionWidget |
+
+Adding a widget: (1) class in `app/Metrics` extending `Metric` (`permission()`, `resolve()`),
+(2) register it in `config/metrics.php`, (3) add an entry to `web/src/config/dashboard.js`.

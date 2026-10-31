@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Concerns\Filterable;
 use App\Concerns\Sortable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -11,7 +13,7 @@ use LogicException;
 
 class AuditLog extends Model
 {
-    use Filterable, Sortable;
+    use Filterable, MassPrunable, Sortable;
 
     public $timestamps = false; // we only have created_at, set explicitly
 
@@ -60,5 +62,10 @@ class AuditLog extends Model
     public function defaultSort(): string
     {
         return '-created_at';
+    }
+
+    public function prunable(): Builder
+    {
+        return static::where('created_at', '<', now()->subDays(config('audit.retention_days')));
     }
 }
