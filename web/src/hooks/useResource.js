@@ -19,7 +19,8 @@ export function useResourceMutations(resource, { alsoInvalidate = [] } = {}) {
   const queryClient = useQueryClient()
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: [resource] }) // prefix match: all lists of this resource
+    queryClient.invalidateQueries({ queryKey: [resource] })
+    queryClient.invalidateQueries({ queryKey: ["metrics"] }) // dashboard numbers depend on this data
     alsoInvalidate.forEach((queryKey) => queryClient.invalidateQueries({ queryKey }))
   }
 
