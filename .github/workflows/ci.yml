@@ -17,6 +17,14 @@ jobs:
     defaults:
       run:
         working-directory: api
+      env:
+        # Environment variables win over phpunit.xml's SQLite defaults
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_DATABASE: admin_starter_test
+        DB_USERNAME: admin_starter
+        DB_PASSWORD: secret
 
     # A real MySQL, so tests run on the same engine as production (SQLite hides differences)
     services:
@@ -66,18 +74,10 @@ jobs:
         run: vendor/bin/pint --test
 
       - name: Tests
-        env:
-          # Environment variables win over phpunit.xml's SQLite defaults
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: admin_starter_test
-          DB_USERNAME: admin_starter
-          DB_PASSWORD: secret
         run: php artisan test
 
       - name: Routes and config can be cached (production check)
-        run: php artisan optimize && php artisan optimize:clear
+        run: php artisan optimize
 
   web:
     name: Web (React)
